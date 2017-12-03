@@ -31,7 +31,7 @@ public class Translator {
 
     public String translate(String input){
         StringBuilder output = new StringBuilder();
-        String[] words = input.split(" ");
+        String[] words = input.split(" |\n|\t|\r");
         for (String word : words){
             output.append(translateWord(word) + ' ');
         }
@@ -71,7 +71,7 @@ public class Translator {
             }
         }
 
-        if (CONSONENT_STR.lastIndexOf(word.charAt(word.length() - 1)) != -1 && word.length() < 6){
+        if (consonent > 0 && word.length() < 6){
             word.append('ь');
         }
     }
