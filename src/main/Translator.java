@@ -6,7 +6,7 @@ import java.util.Map;
 public class Translator {
 
     private static final String VOWEL_STR = "уеыаоэяю";
-    private static final String CONSONENT_STR = "йцкнгшщзхфвпрлджчсмтб";
+    private static final String CONSONENT_STR = "цкнгшщзхфвпрлджчсмтб";
 
     private Map<String, String> rusToKoska = new HashMap<>();
 
@@ -18,7 +18,7 @@ public class Translator {
         this.rusToKoska.put("ч", "т");
         this.rusToKoska.put("ы", "и");
         this.rusToKoska.put("ц", "т");
-        this.rusToKoska.put("Р", "л");
+        this.rusToKoska.put("р", "л");
         this.rusToKoska.put("Ж", "з");
         this.rusToKoska.put("Ш", "с");
         this.rusToKoska.put("Щ", "с");
@@ -43,26 +43,36 @@ public class Translator {
 
         for (int i = 0; i < inputWord.length(); i++){
             String rusSeq = Character.toString(inputWord.charAt(i));
-            if (rusToKoska.containsKey(rusSeq) && i != 0 && i != inputWord.length() - 1){ //do not touch first and last symbol
+
+            if (rusToKoska.containsKey(rusSeq)
+      //              && i != 0 && i != inputWord.length() - 1
+                    ){ //I'm not sure if we should replace first&last symbol
                 output.append(rusToKoska.get(rusSeq));
             }
             else
                 output.append(rusSeq);
         }
 
+        insertSoftSignes(output);
+        return output.toString();
+    }
+
+    private void insertSoftSignes(StringBuilder word){
         int consonent = 0;
-        for (int i = 1; i < output.length(); i++) {
-            if (CONSONENT_STR.lastIndexOf(output.charAt(i)) != -1) {
+        for (int i = 1; i < word.length(); i++) {
+            if (CONSONENT_STR.lastIndexOf(word.charAt(i)) != -1) {
                 consonent++;
             }
             else {
                 if (consonent > 1) {
-                    output.insert(i - 1, 'ь');
+                    word.insert(i - 1, 'ь');
                 }
                 consonent = 0;
             }
         }
 
-        return output.toString();
+        if (CONSONENT_STR.lastIndexOf(word.charAt(word.length() - 1)) != -1 && word.length() < 6){
+            word.append('ь');
+        }
     }
 }
